@@ -7,3 +7,4 @@ Research and design for verifying business documents that advertisers upload to 
 - `docs/research/02-authoritative-registries-and-kyb-sources.md`: state registries, certificate validators, federal registries, license databases, notary and e-signature checks, affiliation data.
 - `docs/research/03-forgery-and-ai-generation-detection.md`: vendors, forensic techniques and their robustness, research benchmarks, open-source tooling, vision-LLM failure modes.
 - `docs/research/04-affiliation-verification.md`: how marketplaces verify authorization, out-of-band methods, franchise and subsidiary sources, legal meaning of "authorized dealer", e-signature validation.
+- `docs/research/05-gambling-and-cannabis-license-sources.md`: gaming-commission and cannabis-regulator licensee lists by state, affiliate registration, tribal gaming, Google's gambling certification standard, fraud patterns.

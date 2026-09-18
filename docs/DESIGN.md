@@ -2,7 +2,7 @@
 
 Status: proposal, 2026-09-16. Scope: United States. First target document class: affiliation proofs (dealer, installer, reseller, franchisee, subsidiary) plus the state registration certificates that usually accompany them.
 
-Supporting evidence is in `docs/research/01` through `04`. Every factual claim below is cited there.
+Supporting evidence is in `docs/research/01` through `05`. Every factual claim below is cited there.
 
 ---
 
@@ -176,8 +176,39 @@ Each verdict carries: the questions answered (Q1 provenance, Q2 truth, Q3 identi
 ### 4.4 IRS EIN letters (CP 575, 147C)
 There is no IRS-side check available to anyone but the taxpayer. The IRS TIN Matching program is only for payers filing certain 1099s. The most the system can do: EIN prefix validity, letter format and wording consistency, name match to the SOS record, and cross-upload reuse. These letters must land in UNVERIFIABLE or SUSPICIOUS, never CORROBORATED. Say this to leadership now, because it is the document Google lists first.
 
-### 4.5 Licenses and registrations
-- Cannabis: state databases exist for CA, CO, WA, OR, MI, IL, MA, NV, AZ, NY, NJ, FL in varying formats. Under Google's US policy a dispensary license is not an approval path, so its appearance is a signal in itself.
+### 4.5 Government permission documents: gambling and cannabis licenses
+
+This is the easiest document class in the whole problem and the one where the uploaded file matters least. A license is issued by a regulator that publishes a licensee list, so the source of truth exists and the document is only a pointer: extract the license number and licensee, then look them up. The design differs from certificates and affiliation letters in four ways. Evidence in appendix 5.
+
+Why the file matters least
+- The forged-file threat is real (the California Gambling Control Commission issued a January 2026 advisory about forged notices carrying its logo) but irrelevant to the verdict, because the regulator lookup decides. Forensics only add a reviewer note.
+- The dominant threat is the opposite: a real license used by the wrong advertiser. Licensee lists are public and name-matchable, so anyone can copy a real dispensary's number and legal name onto a plausible document. A naive "does this number exist" check passes it. No regulator notice documenting this exact pattern was found, but Iowa and Tennessee regulators warn about sites spoofing real licensed operators. So the verdict must bind the advertiser's legal entity, domain, and account identity to the licensee record (Q3), not just confirm the record exists (Q2).
+
+Four differences from the certificate playbook
+
+1. Coverage is a data-engineering grind, not an AI problem. Cannabis: California has a daily-refreshed undocumented JSON API and a bulk CSV of about 21,000 records with legal name, DBA, status, and expiry; New York and Oregon are Socrata datasets; Colorado is monthly Google Sheets; Washington and Nevada are dated spreadsheets; Illinois and Arizona are stale PDFs (Arizona's dates from 2021). Gambling: most regulators publish operator lists as dated PDFs or HTML with no license number, no status, and no expiry. Only Kentucky, Illinois, Massachusetts (vendors), West Virginia, North Carolina, Louisiana, Indiana, and Tennessee expose numbers or dates. Michigan and New York list brands only, with no legal entity.
+2. Name resolution is the hard part. Gambling licenses are issued to entities like "Crown NJ Gaming Inc" while the advertiser is "DraftKings". The lookup needs a brand-to-licensee mapping per state, DBA matching, and a parent link (GLEIF or Exhibit 21) before a mismatch is called SUSPICIOUS.
+3. Status and scope, not existence. A license can be surrendered, suspended, revoked, expired, or provisional, and it is scoped to a license type (cultivation versus retail; sports wagering versus iGaming) and a state. Where the list carries status (California, Oregon, Washington, New York, Kentucky, Illinois) the rubric uses it; where the list is a snapshot that silently drops lapsed licensees (Pennsylvania, Ohio, Maryland, West Virginia), a no-match is reported as "not on the current list as of <date>", never as "revoked". Every lookup result carries the list's as-of date.
+4. The policy layer sits on top. "Real license" and "may run this ad" are different questions. Under current Google Ads policy a US dispensary license is not an approval path at all, and gambling advertisers must hold a license in every state they target, with affiliates linking only to licensed operators and destination footers showing licensee name and license number (August 2026 update). So the output is two-part: license verdict plus a policy mapping of license type and state to allowed ad categories and geos.
+
+Affiliates are the gap
+Most gambling advertisers are marketing affiliates, not operators. Only New Jersey (daily vendor report), Pennsylvania (registered gaming service providers, many labeled "Affiliate marketing", with expiry), and Massachusetts (vendor list with license numbers) publish lists an affiliate can be matched against; Colorado, Kansas, Tennessee, and Virginia partially. Elsewhere an affiliate holds no verifiable credential and the claim falls back to the affiliation playbook in 4.2: relationship evidence with a licensed operator, which is exactly what Google's August 2026 certification standard now demands.
+
+Tribal gaming
+Tribal operations are licensed by each tribe's own commission under an NIGC-approved ordinance. No single federal list names operating entities. A "tribal gaming license" upload lands in UNVERIFIABLE unless a state list (Michigan's spreadsheet names tribe, casino, and platform provider) corroborates it.
+
+Playbook
+1. Extract regulator, state, license number, license type, licensee legal name, DBA, premises address, issue and expiry dates.
+2. Validate the number format against the state pattern (California `C10-0000123-LIC`, New York `OCM-RETL-25-000306`, Illinois `284.000001-AUDO`, Massachusetts vendors `SWV-0001`, North Carolina `NCO-0001`). A wrong format is SUSPICIOUS before any lookup.
+3. Look up the number in the regulator source; record the as-of date. Compare legal name, DBA, type, status, expiry, and address to the extraction. Number found under a different name is FABRICATED.
+4. Bind to the advertiser: licensee legal name or DBA against the account's legal name; licensee website or premises against the ad's domain and location; for gambling brands, resolve brand to licensee entity per state. A real license with no binding to the advertiser is SUSPICIOUS, not CORROBORATED.
+5. Map license type and state to the policy outcome for the ad category and target geos.
+6. Affiliates: match against NJ, PA, MA vendor lists; otherwise require operator relationship evidence via 4.2.
+7. Cross-upload: the same license number appearing under different advertiser accounts is a hard flag.
+
+Build order for two weeks: California cannabis (API plus bulk), New York and Oregon (Socrata), Colorado (sheets); gambling Kentucky, Illinois, North Carolina, West Virginia, and the NJ, PA, MA vendor lists. That covers the highest-volume markets and every source with a machine-readable number and status. The rest are HTML or PDF snapshots and go on a scrape-and-cache backlog with an as-of date on every record.
+
+### 4.6 Other licenses and registrations
 - Crypto: FinCEN MSB weekly list plus state money-transmitter registries; a FinCEN hit proves registration, not legitimacy.
 - Contractors: Texas via Socrata, Florida via weekly CSV, California CSLB lists.
 - Patents and trademarks: USPTO ODP and TSDR return the owner of record; match to the advertiser entity.
