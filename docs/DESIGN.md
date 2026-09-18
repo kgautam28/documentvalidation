@@ -294,6 +294,23 @@ Rough per-document model cost at Opus 5 list prices (rendered pages plus a ten-c
 
 ---
 
+## 8b. Who already does this
+
+Nobody sells the combined job as a product. Detail in appendix 6. The landscape by method:
+
+| Method | Players | Accuracy evidence | Relevance |
+|---|---|---|---|
+| Manual analyst certification | LegitScript (pharmacy, CBD, addiction), G2 Risk Solutions (financial services, non-US), NABP | None published; no SLAs or error rates | This is the incumbent Google outsources to. Its weaknesses are structural: per-merchant fees, opacity, one manual program per vertical. |
+| Registry data APIs | Middesk (Shopify, Toast), Enigma (Faire; publishes 92% match rate), Baselayer, Cobalt, Sumsub, Persona, Trulioo | Match rates only, self-reported; nothing on forged-document false accepts | Buy for coverage; none adjudicates an uploaded document or validates a certificate number. |
+| Document forensics | Resistant AI ($55M raised, 150M docs, only vendor accepting arbitrary business docs), Inscribe, Ocrolus | Self-reported only; no independent evaluation exists | Secondary signal at best, per appendix 3. |
+| Primary-source license lookup at scale | Verifiable (6M verifications/month, 300+ boards, healthcare), CAQH, Cannabiz Media and Simplifya (cannabis, partly manual) | Verifiable claims over 97% success | Proves the registry model scales when one vertical has volume. No gambling-license vendor exists. |
+| AI compliance agents (closest in method) | Parcha (claims 99%+, self-reported), Bretton AI ($75M Series B, Feb 2026), Sardine, Middesk agents | Self-reported; Bretton claims 70% manual review reduction | Document plus registry plus reasoned decision, exactly this design, but sold to banks under AML mandates, not to trust and safety. |
+| After-the-fact ad impersonation detection | Doppel, Marcode, BrandVerity, Red Points, MarqVision | Not applicable | Complements, does not replace, upload-time verification. |
+
+Implication for this project: the design in section 3 is the same shape as what Parcha and Bretton sell to banks, applied to a market they do not serve, with two components no vendor offers at all: certificate-number validation against state validators and out-of-band affiliation confirmation. The build-versus-buy table stands: buy registry coverage, build validators and affiliation.
+
+---
+
 ## 9. Open decisions for leadership
 
 1. Is the product decision support for reviewers or an auto-decision gate? The plan delivers the first; the second requires the evaluation set and a false-accept target.
